@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base resets ─────────────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #0D0F12;
+  color: #F0EDE8;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #14171C;
+}
+::-webkit-scrollbar-thumb {
+  background: #23282F;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F5A623;
+}
+
+/* ── Selection ───────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(245, 166, 35, 0.3);
+  color: #F0EDE8;
+}
+
+/* ── Waveform animation (landing hero background) ────────────────────── */
+.waveform-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 120px;
+  opacity: 0.12;
+}
+
+.waveform-bar {
+  width: 3px;
+  background: #F5A623;
+  border-radius: 2px;
+  animation: waveform var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes waveform {
+  0%, 100% {
+    height: var(--min-h, 8px);
+  }
+  50% {
+    height: var(--max-h, 60px);
+  }
+}
+
+/* ── Glow effects ────────────────────────────────────────────────────── */
+.glow-amber {
+  box-shadow: 0 0 20px rgba(245, 166, 35, 0.15),
+              0 0 60px rgba(245, 166, 35, 0.05);
+}
+
+.glow-amber-strong {
+  box-shadow: 0 0 30px rgba(245, 166, 35, 0.25),
+              0 0 80px rgba(245, 166, 35, 0.1);
+}
+
+/* ── Card hover glow ─────────────────────────────────────────────────── */
+.card-glow {
+  transition: all 0.3s ease;
+  border: 1px solid #23282F;
+}
+.card-glow:hover {
+  border-color: rgba(245, 166, 35, 0.3);
+  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.08),
+              0 0 40px rgba(245, 166, 35, 0.04);
+  transform: translateY(-2px);
+}
+
+/* ── Typewriter cursor ───────────────────────────────────────────────── */
+.typewriter-cursor::after {
+  content: "▌";
+  animation: blink 1s step-end infinite;
+  color: #F5A623;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Dropzone styling ────────────────────────────────────────────────── */
+.dropzone-active {
+  border-color: #F5A623 !important;
+  background: rgba(245, 166, 35, 0.05) !important;
+}
+
+/* ── Line numbers for textarea ───────────────────────────────────────── */
+.line-numbers {
+  counter-reset: line;
+}
+.line-numbers .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2em;
+  margin-right: 1em;
+  text-align: right;
+  color: #555A63;
+  font-size: 12px;
+}
+
+/* ── Progress step dots ──────────────────────────────────────────────── */
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #23282F;
+  transition: all 0.4s ease;
+}
+.step-dot.active {
+  background: #F5A623;
+  box-shadow: 0 0 12px rgba(245, 166, 35, 0.5);
+}
+.step-dot.complete {
+  background: #22C55E;
+}
+
+/* ── Gauge SVG ───────────────────────────────────────────────────────── */
+.gauge-text {
+  font-family: var(--font-dm-mono), monospace;
+  font-weight: 500;
+}
