@@ -74,12 +74,20 @@ export default function LandingPage() {
             Meet<span className="text-accent">Mind</span>
           </span>
         </div>
-        <Link
-          href="/analyze"
-          className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
-        >
-          Launch App →
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/demo"
+            className="text-sm text-status-low hover:text-status-low/80 transition-colors font-mono"
+          >
+            ✨ Live Demo
+          </Link>
+          <Link
+            href="/analyze"
+            className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
+          >
+            Launch App →
+          </Link>
+        </div>
       </motion.nav>
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
@@ -158,15 +166,7 @@ export default function LandingPage() {
             </span>
           </Link>
 
-          <Link
-            href="/demo"
-            id="cta-try-demo"
-            className="px-8 py-4 border border-status-low/30 text-status-low font-display font-bold text-base rounded-xl transition-all hover:border-status-low/60 hover:bg-status-low/5"
-          >
-            <span className="flex items-center gap-2">
-              ✨ Try Demo
-            </span>
-          </Link>
+
         </motion.div>
 
         {/* ── Stats row ──────────────────────────────────────────── */}
