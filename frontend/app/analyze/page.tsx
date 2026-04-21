@@ -136,6 +136,14 @@ function AnalyzePageInner() {
             Meet<span className="text-accent">Mind</span>
           </span>
         </Link>
+        <div className="flex gap-6 items-center">
+          <Link
+            href="/history"
+            className="text-sm font-bold text-text hover:text-accent transition-colors"
+          >
+            History
+          </Link>
+        </div>
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 pb-24">

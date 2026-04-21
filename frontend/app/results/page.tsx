@@ -62,6 +62,12 @@ export default function ResultsPage() {
 
         <div className="flex items-center gap-4">
           <Link
+            href="/history"
+            className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
+          >
+            History
+          </Link>
+          <Link
             href="/analyze"
             className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
           >

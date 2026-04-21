@@ -491,8 +491,24 @@ export default function ExportBar({ analysis }: Props) {
   };
 
   const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      const history = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+      // Check if already saved this session
+      if (!history.find((h: any) => h.tldr === analysis?.tldr)) {
+        history.unshift({
+          id: Date.now().toString(),
+          date: new Date().toISOString(),
+          tldr: analysis?.tldr,
+          health: analysis?.meeting_health_score,
+          analysisData: analysis, 
+        });
+        localStorage.setItem("meetmind_history", JSON.stringify(history));
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e) {
+      console.error("Failed to save to history", e);
+    }
   };
 
   return (
