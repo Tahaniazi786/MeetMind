@@ -372,8 +372,8 @@ function generateClientPdf(analysis: MeetingAnalysis) {
         { label: "Participation", key: "participation" },
         { label: "Actionability", key: "actionability" },
       ].map(item => {
-        const val = (analysis.health_breakdown as Record<string, number>)[item.key] || 0;
-        const explain = analysis.health_explanations ? (analysis.health_explanations as Record<string, string>)[item.key] || "" : "";
+        const val = (analysis.health_breakdown as any)[item.key] || 0;
+        const explain = analysis.health_explanations ? (analysis.health_explanations as any)[item.key] || "" : "";
         return `
         <div class="health-item">
           <div class="health-top">
