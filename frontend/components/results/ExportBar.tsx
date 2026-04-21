@@ -43,10 +43,12 @@ function generateClientPdf(analysis: MeetingAnalysis) {
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #ffffff;
-      color: #1a1a1a;
-      font-size: 11px;
+      color: #000000;
+      font-size: 12px;
       line-height: 1.6;
       padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     .page {
@@ -65,15 +67,15 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       border-bottom: 3px solid #F5A623;
     }
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      color: #0D0F12;
+      color: #000000;
       letter-spacing: -0.5px;
     }
     .logo span { color: #F5A623; }
     .header-meta {
-      color: #6B7280;
-      font-size: 10px;
+      color: #333333;
+      font-size: 11px;
       margin-top: 4px;
       line-height: 1.5;
     }
@@ -84,23 +86,23 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       padding: 6px 14px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 11px;
+      font-size: 12px;
       color: white;
       white-space: nowrap;
     }
 
     /* ── CONFLICT BANNER ────────────────────── */
     .conflict-banner {
-      background: #FEF3C7;
-      border: 1px solid #F59E0B;
-      border-left: 4px solid #F59E0B;
+      background: #FFF8E1;
+      border: 2px solid #E65100;
+      border-left: 5px solid #E65100;
       border-radius: 6px;
-      padding: 12px 16px;
+      padding: 14px 18px;
       margin-bottom: 20px;
-      font-size: 11px;
-      color: #92400E;
+      font-size: 12px;
+      color: #000000;
     }
-    .conflict-banner strong { color: #B45309; }
+    .conflict-banner strong { color: #BF360C; font-weight: 800; }
 
     /* ── STATS GRID ─────────────────────────── */
     .stats-grid {
@@ -110,24 +112,24 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       margin-bottom: 24px;
     }
     .stat-card {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: #F5F5F5;
+      border: 2px solid #333333;
       border-radius: 8px;
-      padding: 14px 16px;
+      padding: 16px 18px;
       text-align: center;
     }
     .stat-value {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
       line-height: 1.2;
     }
     .stat-label {
-      color: #6B7280;
-      font-size: 9px;
+      color: #000000;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       margin-top: 4px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     /* ── SECTION ─────────────────────────────── */
@@ -136,12 +138,14 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       page-break-inside: avoid;
     }
     .section-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #0D0F12;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 2px solid #F3F4F6;
+      font-size: 15px;
+      font-weight: 800;
+      color: #000000;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      background: #F0F0F0;
+      border-left: 4px solid #F5A623;
+      border-radius: 0 6px 6px 0;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -154,10 +158,10 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       gap: 10px;
     }
     .health-item {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: #F5F5F5;
+      border: 1px solid #AAAAAA;
       border-radius: 6px;
-      padding: 10px 14px;
+      padding: 12px 14px;
     }
     .health-top {
       display: flex;
@@ -165,37 +169,37 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       align-items: center;
       margin-bottom: 6px;
     }
-    .health-name { font-weight: 600; font-size: 11px; }
-    .health-score { font-weight: 700; font-size: 11px; color: #F5A623; }
+    .health-name { font-weight: 700; font-size: 12px; color: #000000; }
+    .health-score { font-weight: 800; font-size: 12px; color: #E65100; }
     .health-bar-bg {
       width: 100%;
-      height: 6px;
-      background: #E5E7EB;
-      border-radius: 3px;
+      height: 8px;
+      background: #D0D0D0;
+      border-radius: 4px;
       overflow: hidden;
       margin-bottom: 4px;
     }
     .health-bar {
       height: 100%;
-      background: #F5A623;
-      border-radius: 3px;
+      background: #E65100;
+      border-radius: 4px;
     }
     .health-explain {
-      color: #6B7280;
-      font-size: 9px;
+      color: #333333;
+      font-size: 10px;
       font-style: italic;
       line-height: 1.4;
     }
 
     /* ── SUMMARY ──────────────────────────────── */
     .summary-text {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: #F5F5F5;
+      border: 1px solid #AAAAAA;
       border-radius: 8px;
-      padding: 14px 16px;
-      font-size: 11px;
+      padding: 16px 18px;
+      font-size: 12px;
       line-height: 1.7;
-      color: #374151;
+      color: #000000;
     }
 
     /* ── TABLE ────────────────────────────────── */
@@ -207,96 +211,103 @@ function generateClientPdf(analysis: MeetingAnalysis) {
     }
     th {
       text-align: left;
-      padding: 8px 10px;
-      background: #F3F4F6;
-      color: #374151;
-      font-size: 9px;
+      padding: 10px 12px;
+      background: #222222;
+      color: #FFFFFF;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      border-bottom: 2px solid #E5E7EB;
+      border-bottom: 2px solid #000000;
     }
     td {
-      padding: 8px 10px;
-      border-bottom: 1px solid #F3F4F6;
+      padding: 10px 12px;
+      border-bottom: 1px solid #D0D0D0;
       vertical-align: top;
-      color: #374151;
+      color: #000000;
+      font-size: 11px;
     }
-    tr:nth-child(even) { background: #FAFAFA; }
+    tr:nth-child(even) { background: #F0F0F0; }
+    .task-text { font-weight: 500; }
     .priority-badge {
       display: inline-block;
       padding: 2px 10px;
       border-radius: 10px;
       color: white;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
-    .owner { color: #D97706; font-weight: 600; }
+    .owner { color: #BF360C; font-weight: 700; }
 
     /* ── DECISIONS ────────────────────────────── */
     .decision-card {
-      background: #F9FAFB;
-      border-left: 3px solid #F5A623;
+      background: #F5F5F5;
+      border-left: 4px solid #1565C0;
       border-radius: 0 6px 6px 0;
-      padding: 10px 14px;
-      margin-bottom: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-top: 1px solid #D0D0D0;
+      border-right: 1px solid #D0D0D0;
+      border-bottom: 1px solid #D0D0D0;
     }
-    .decision-title { font-weight: 700; font-size: 11px; color: #1a1a1a; margin-bottom: 2px; }
-    .decision-by { color: #D97706; font-size: 10px; font-weight: 600; }
-    .decision-ctx { color: #6B7280; font-size: 10px; margin-top: 2px; }
+    .decision-title { font-weight: 700; font-size: 12px; color: #000000; margin-bottom: 3px; }
+    .decision-by { color: #1565C0; font-size: 11px; font-weight: 700; }
+    .decision-ctx { color: #333333; font-size: 11px; margin-top: 3px; }
 
     /* ── SENTIMENT ────────────────────────────── */
     .sentiment-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-    .sentiment-name { width: 80px; font-size: 11px; font-weight: 600; }
+    .sentiment-name { width: 80px; font-size: 12px; font-weight: 700; color: #000000; }
     .sentiment-bar-bg {
       flex: 1;
-      height: 10px;
-      background: #E5E7EB;
-      border-radius: 5px;
+      height: 14px;
+      background: #D0D0D0;
+      border-radius: 7px;
       overflow: hidden;
     }
-    .sentiment-bar { height: 100%; border-radius: 5px; }
-    .sentiment-label { width: 70px; text-align: right; font-size: 10px; color: #6B7280; }
-    .sentiment-pct { width: 35px; text-align: right; font-size: 10px; font-weight: 600; }
+    .sentiment-bar { height: 100%; border-radius: 7px; }
+    .sentiment-label { width: 70px; text-align: right; font-size: 11px; color: #000000; font-weight: 600; text-transform: capitalize; }
+    .sentiment-pct { width: 35px; text-align: right; font-size: 11px; font-weight: 700; color: #000000; }
 
     /* ── TOPICS ───────────────────────────────── */
-    .topics { display: flex; flex-wrap: wrap; gap: 6px; }
+    .topics { display: flex; flex-wrap: wrap; gap: 8px; }
     .topic-tag {
-      padding: 4px 12px;
-      background: #F3F4F6;
-      border: 1px solid #E5E7EB;
+      padding: 5px 14px;
+      background: #E8EAF6;
+      border: 1px solid #5C6BC0;
       border-radius: 14px;
-      font-size: 10px;
-      color: #374151;
-      font-weight: 500;
+      font-size: 11px;
+      color: #1A237E;
+      font-weight: 600;
     }
 
     /* ── EMAIL ────────────────────────────────── */
     .email-box {
-      background: #F9FAFB;
-      border: 1px solid #E5E7EB;
+      background: #F5F5F5;
+      border: 1px solid #999999;
       border-radius: 8px;
-      padding: 16px;
+      padding: 18px;
       white-space: pre-wrap;
-      font-size: 10px;
+      font-size: 11px;
       line-height: 1.7;
-      color: #374151;
+      color: #000000;
     }
 
     /* ── FOOTER ───────────────────────────────── */
     .footer {
       margin-top: 32px;
       padding-top: 12px;
-      border-top: 2px solid #F3F4F6;
+      border-top: 3px solid #333333;
       text-align: center;
-      color: #9CA3AF;
-      font-size: 9px;
+      color: #555555;
+      font-size: 10px;
+      font-weight: 500;
     }
 
     /* ── PRINT ────────────────────────────────── */
