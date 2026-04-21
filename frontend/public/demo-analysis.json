@@ -1,0 +1,68 @@
+{
+  "tldr": "The team discussed Q4 roadmap priorities and budget allocation. Key decisions were made about mobile-first strategy and hiring timeline.",
+  "executive_summary": "In this product planning meeting, the team reviewed Q4 priorities focusing on mobile app development. Sarah presented data showing 68% of user traffic now comes from mobile devices, making a compelling case for mobile-first strategy. John initially had concerns about timeline compression but Maria proposed a phased approach. Budget discussions resulted in a $250K allocation, with $150K earmarked for two new frontend developer hires and $100K for infrastructure. Lisa raised critical enterprise churn concerns — 47 accounts threatening to leave due to API reliability issues, representing $2.1M ARR at risk.",
+  "detailed_summary": "The product planning meeting covered Q4 roadmap prioritization with all key stakeholders present — Sarah (VP Product), John (Engineering Lead), Maria (Design Lead), Tom (Marketing Director), and Lisa (Customer Success). Sarah presented data showing 68% of user traffic now comes from mobile devices, making a compelling case for mobile-first strategy. John initially had concerns about timeline compression but Maria proposed a phased approach: MVP by November 15th, followed by iterative improvements. Budget discussions resulted in a $250K allocation, with $150K earmarked for two new frontend developer hires and $100K for infrastructure and tooling. Tom outlined a full marketing campaign including influencer partnerships and a Product Hunt launch. Lisa raised a critical concern: 47 enterprise customers threatening to churn due to 99.2% uptime falling short of their 99.9% expectations, representing $2.1M in annual recurring revenue at risk. The team agreed to a targeted reliability sprint to address the most critical failure points.",
+  "action_items": [
+    { "task": "Draft mobile app MVP specification document", "owner": "Sarah", "deadline": "Oct 15, 2024", "priority": "high" },
+    { "task": "Post job listings for 2 frontend developers", "owner": "John", "deadline": "Oct 10, 2024", "priority": "high" },
+    { "task": "Create mobile UI design mockups", "owner": "Maria", "deadline": "Oct 20, 2024", "priority": "high" },
+    { "task": "Draft contractor requirements document", "owner": "John", "deadline": "End of day tomorrow", "priority": "high" },
+    { "task": "Prepare December launch marketing plan", "owner": "Tom", "deadline": "Nov 1, 2024", "priority": "medium" },
+    { "task": "Set up engineering-CS Slack channel", "owner": "John", "deadline": "Today", "priority": "medium" },
+    { "task": "Communicate reliability improvements to enterprise clients", "owner": "Lisa", "deadline": "This week", "priority": "medium" },
+    { "task": "Set up mobile CI/CD pipeline", "owner": "John", "deadline": "Oct 25, 2024", "priority": "low" },
+    { "task": "Conduct user research for mobile features", "owner": "Maria", "deadline": "Oct 18, 2024", "priority": "low" },
+    { "task": "Send weekly engineering capacity report", "owner": "John", "deadline": "Friday", "priority": "low" }
+  ],
+  "decisions": [
+    { "decision": "Adopt mobile-first development strategy for Q4", "made_by": "Sarah", "context": "68% of user traffic comes from mobile devices" },
+    { "decision": "Allocate $250K budget for mobile initiative", "made_by": "Sarah", "context": "Approved by finance — $150K hiring, $100K infrastructure" },
+    { "decision": "Hire 2 senior React contractors immediately", "made_by": "Sarah", "context": "Bridge solution while full-time hiring cycle completes" },
+    { "decision": "Cut group chat from social MVP — ship profiles, DMs, activity feeds only", "made_by": "Maria", "context": "Reduces scope to meet February 28 deadline" },
+    { "decision": "Reliability sprint starts January 15th targeting 99.7% uptime", "made_by": "Sarah", "context": "Protects $2.1M ARR from 47 at-risk enterprise accounts" },
+    { "decision": "Marketing launch date: February 28 with February 14 feature freeze", "made_by": "Tom", "context": "Aligns with holiday shopping season and prepared campaign" }
+  ],
+  "sentiment_analysis": {
+    "overall": "mixed",
+    "score": 68,
+    "breakdown": [
+      { "speaker": "Sarah", "sentiment": "positive", "confidence": 0.92 },
+      { "speaker": "John", "sentiment": "tense", "confidence": 0.78 },
+      { "speaker": "Maria", "sentiment": "positive", "confidence": 0.88 },
+      { "speaker": "Tom", "sentiment": "positive", "confidence": 0.85 },
+      { "speaker": "Lisa", "sentiment": "neutral", "confidence": 0.72 }
+    ]
+  },
+  "meeting_health_score": 82,
+  "health_breakdown": {
+    "clarity": 21,
+    "decisions_made": 24,
+    "participation": 17,
+    "actionability": 20
+  },
+  "health_explanations": {
+    "clarity": "Communication was mostly clear across 5 speakers, though timeline specifics had 2 ambiguous directives",
+    "decisions_made": "6 concrete decisions were reached, each with clear ownership and rationale documented",
+    "participation": "Sarah dominated ~40% of speaking time; Lisa and Maria had limited contributions compared to others",
+    "actionability": "10 clear action items identified with owners assigned, though 3 lack specific calendar deadlines"
+  },
+  "conflict_detection": {
+    "has_conflict": true,
+    "conflicts": [
+      {
+        "speaker_a": "John",
+        "speaker_b": "Sarah",
+        "topic": "timeline compression and team capacity",
+        "description": "John expressed strong concerns about the aggressive Q4 timeline, stating it was 'unrealistic' and requesting it be 'on record'. He pushed back on Sarah's proposed delivery date, citing burnout risk and technical debt from previous rushed timelines. A compromise was eventually reached through contractor hiring."
+      }
+    ]
+  },
+  "meeting_archetype": {
+    "type": "decision",
+    "label": "Decision Meeting",
+    "emoji": "🔴",
+    "description": "6 major strategic decisions were made with significant budget commitments"
+  },
+  "key_topics": ["mobile app", "Q4 roadmap", "budget allocation", "hiring", "contractors", "frontend developers", "MVP scope", "marketing launch", "enterprise churn", "API reliability", "uptime SLA", "onboarding redesign", "social features", "technical debt", "weekly standups"],
+  "follow_up_email": "Subject: Q4 Product Planning — Summary & Action Items\n\nHi Team,\n\nThank you for a productive (and spirited!) planning session today. Here's the full recap:\n\n━━━ DECISIONS MADE ━━━\n• Mobile-first strategy adopted for Q4 (68% mobile traffic)\n• $250K budget allocated — $150K hiring, $100K infrastructure\n• 2 senior React contractors to be hired immediately\n• Social MVP: profiles + DMs + activity feeds (group chat deferred)\n• Reliability sprint starts Jan 15 → target 99.7% uptime\n• Marketing launch Feb 28, feature freeze Feb 14\n\n━━━ ACTION ITEMS ━━━\n• Sarah → MVP spec by Oct 15\n• John → Post frontend dev listings by Oct 10\n• John → Contractor requirements by EOD tomorrow\n• John → Set up eng-CS Slack channel today\n• John → Weekly capacity report starting Friday\n• Maria → UI mockups by Oct 20\n• Maria → User research by Oct 18\n• Tom → Marketing plan by Nov 1\n• Lisa → Communicate reliability plan to enterprise clients this week\n\n━━━ NOTE ━━━\nJohn has flagged team capacity concerns — please review the weekly capacity reports carefully. The contractor bridge is critical to maintaining quality.\n\nWeekly check-ins start Monday at 10 AM.\n\nBest regards,\nMeetMind AI Assistant"
+}

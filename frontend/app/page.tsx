@@ -157,6 +157,16 @@ export default function LandingPage() {
               Paste Transcript
             </span>
           </Link>
+
+          <Link
+            href="/demo"
+            id="cta-try-demo"
+            className="px-8 py-4 border border-status-low/30 text-status-low font-display font-bold text-base rounded-xl transition-all hover:border-status-low/60 hover:bg-status-low/5"
+          >
+            <span className="flex items-center gap-2">
+              ✨ Try Demo
+            </span>
+          </Link>
         </motion.div>
 
         {/* ── Stats row ──────────────────────────────────────────── */}
