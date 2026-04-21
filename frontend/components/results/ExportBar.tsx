@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import type { MeetingAnalysis } from "@/context/MeetingContext";
 
 interface Props {
@@ -524,6 +525,12 @@ export default function ExportBar({ analysis }: Props) {
         </div>
 
         <div className="flex gap-3">
+          <Link
+            href="/history"
+            className="px-5 py-2.5 text-sm font-display font-bold rounded-lg border bg-bg border-bg-border text-text hover:border-accent/30 hover:text-accent transition-all flex items-center justify-center"
+          >
+            View History
+          </Link>
           <button
             onClick={handleSave}
             className={`px-5 py-2.5 text-sm font-display font-bold rounded-lg border transition-all ${
