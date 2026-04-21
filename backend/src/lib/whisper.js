@@ -1,8 +1,11 @@
-const OpenAI = require("openai");
 const fs = require("fs");
+const axios = require("axios");
+const FormData = require("form-data");
+const path = require("path");
 
 /**
  * Transcribe an audio file using OpenAI Whisper API.
+ * Uses axios to bypass extremely flaky Node 18 fetch streams in Alpine
  *
  * @param {string} filePath — absolute path to the audio file
  * @returns {{ transcript: string, duration: number }}
@@ -15,34 +18,53 @@ async function transcribeAudio(filePath) {
     });
   }
 
-  const { toFile } = require("openai");
+  const formData = new FormData();
+  formData.append("file", fs.createReadStream(filePath));
+  formData.append("model", "whisper-1");
+  formData.append("response_format", "verbose_json");
+  formData.append("timestamp_granularities[]", "segment");
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/audio/transcriptions",
+      formData,
+      {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        timeout: 300000, 
+      }
+    );
 
-  // Read file to buffer to avoid Node 18 fetch stream drop issues (causes "Connection error.")
-  const fileBuffer = fs.readFileSync(filePath);
-  const file = await toFile(fileBuffer, filePath.split(/[/\\]/).pop());
+    const transcript = response.data.text || "";
+    const duration = response.data.duration || 0;
 
-  const response = await openai.audio.transcriptions.create({
-    file: file,
-    model: "whisper-1",
-    response_format: "verbose_json",
-    timestamp_granularities: ["segment"],
-  });
+    const speakerPattern = /^([A-Z][a-zA-Z\s]+?):/gm;
+    const speakerMatches = transcript.match(speakerPattern) || [];
+    const uniqueSpeakers = new Set(
+      speakerMatches.map((s) => s.replace(":", "").trim().toLowerCase())
+    );
+    const speakersDetected = Math.max(uniqueSpeakers.size, 1);
 
-  // Whisper returns segments — count unique speakers heuristically
-  const transcript = response.text || "";
-  const duration = response.duration || 0;
-
-  // Attempt speaker detection from transcript patterns like "Speaker 1:", "John:", etc.
-  const speakerPattern = /^([A-Z][a-zA-Z\s]+?):/gm;
-  const speakerMatches = transcript.match(speakerPattern) || [];
-  const uniqueSpeakers = new Set(
-    speakerMatches.map((s) => s.replace(":", "").trim().toLowerCase())
-  );
-  const speakersDetected = Math.max(uniqueSpeakers.size, 1);
-
-  return { transcript, duration, speakersDetected };
+    return { transcript, duration, speakersDetected };
+  } catch (err) {
+    console.error("Axios Whisper Upload Error:", err.message);
+    if (err.response) {
+      throw Object.assign(new Error(err.response.data.error?.message || "OpenAI API Error"), {
+        statusCode: err.response.status,
+        code: "OPENAI_API_ERROR"
+      });
+    } else {
+      throw Object.assign(new Error("Network connection lost while uploading to OpenAI. The file might be too large or the server timed out."), {
+        cause: err,
+        statusCode: 502,
+        code: "OPENAI_NETWORK_ERROR"
+      });
+    }
+  }
 }
 
 module.exports = { transcribeAudio };
