@@ -4,6 +4,9 @@
  */
 function errorHandler(err, _req, res, _next) {
   console.error("🔴 Error:", err.message);
+  if (err.cause) {
+    console.error("🔴 Error Cause:", err.cause);
+  }
   if (process.env.NODE_ENV === "development") {
     console.error(err.stack);
   }
@@ -57,6 +60,7 @@ function errorHandler(err, _req, res, _next) {
   const statusCode = err.statusCode || err.status || 500;
   res.status(statusCode).json({
     error: err.message || "Internal server error",
+    cause: err.cause ? err.cause.message || String(err.cause) : undefined,
     code: err.code || "INTERNAL_ERROR",
   });
 }

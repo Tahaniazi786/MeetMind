@@ -27,7 +27,9 @@ export async function transcribeAudio(file: File): Promise<{
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Transcription failed" }));
-    throw new Error(err.message || err.error || "Transcription failed");
+    const errorMessage = err.message || err.error || "Transcription failed";
+    const detailedMessage = err.cause ? `${errorMessage} (Cause: ${err.cause})` : errorMessage;
+    throw new Error(detailedMessage);
   }
 
   return res.json();
