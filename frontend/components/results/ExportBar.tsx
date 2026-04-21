@@ -43,7 +43,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #ffffff;
-      color: #000000;
+      color: #000000 !important;
       font-size: 12px;
       line-height: 1.6;
       padding: 0;
@@ -138,7 +138,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
     .section-title {
       font-size: 15px;
       font-weight: 800;
-      color: #000000;
+      color: #000000 !important;
       margin-bottom: 12px;
       padding: 8px 0;
       border-bottom: 3px solid #E65100;
