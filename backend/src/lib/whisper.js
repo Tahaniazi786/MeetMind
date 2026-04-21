@@ -15,12 +15,16 @@ async function transcribeAudio(filePath) {
     });
   }
 
+  const { toFile } = require("openai");
+
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  const fileStream = fs.createReadStream(filePath);
+  // Read file to buffer to avoid Node 18 fetch stream drop issues (causes "Connection error.")
+  const fileBuffer = fs.readFileSync(filePath);
+  const file = await toFile(fileBuffer, filePath.split(/[/\\]/).pop());
 
   const response = await openai.audio.transcriptions.create({
-    file: fileStream,
+    file: file,
     model: "whisper-1",
     response_format: "verbose_json",
     timestamp_granularities: ["segment"],
