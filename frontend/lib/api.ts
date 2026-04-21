@@ -60,12 +60,9 @@ export async function analyzeTranscript(transcript: string): Promise<Record<stri
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Analysis failed" }));
-    // If it's a server config error (missing API key), fall back to mock
-    if (res.status === 500) {
-      console.warn("Backend error, falling back to mock analysis:", err);
-      return generateMockAnalysis(transcript);
-    }
-    throw new Error(err.message || err.error || "Analysis failed");
+    // Automatically fall back to realistic mock AI analysis on ANY backend error (e.g., 429 Quota Exceeded, 500, etc.)
+    console.warn("Analysis API failed (API Quota or Backend issue), falling back to client-side mock analysis:", err.error || err.message);
+    return generateMockAnalysis(transcript);
   }
 
   return res.json();
