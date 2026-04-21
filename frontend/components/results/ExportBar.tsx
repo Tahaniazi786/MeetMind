@@ -43,12 +43,12 @@ function generateClientPdf(analysis: MeetingAnalysis) {
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #ffffff;
-      color: #000000;
+      color: #1B2A4A;
       font-size: 12px;
       line-height: 1.6;
       padding: 0;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
 
     .page {
@@ -64,18 +64,19 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       align-items: flex-start;
       padding-bottom: 20px;
       margin-bottom: 24px;
-      border-bottom: 3px solid #F5A623;
+      border-bottom: 3px solid #E65100;
     }
     .logo {
       font-size: 24px;
       font-weight: 800;
-      color: #000000;
+      color: #E65100;
       letter-spacing: -0.5px;
     }
-    .logo span { color: #F5A623; }
+    .logo .white { color: #1B2A4A; }
     .header-meta {
-      color: #333333;
+      color: #1B2A4A;
       font-size: 11px;
+      font-weight: 600;
       margin-top: 4px;
       line-height: 1.5;
     }
@@ -93,14 +94,14 @@ function generateClientPdf(analysis: MeetingAnalysis) {
 
     /* ── CONFLICT BANNER ────────────────────── */
     .conflict-banner {
-      background: #FFF8E1;
+      background: #FFF3E0;
       border: 2px solid #E65100;
       border-left: 5px solid #E65100;
       border-radius: 6px;
       padding: 14px 18px;
       margin-bottom: 20px;
       font-size: 12px;
-      color: #000000;
+      color: #4E342E;
     }
     .conflict-banner strong { color: #BF360C; font-weight: 800; }
 
@@ -124,7 +125,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       line-height: 1.2;
     }
     .stat-label {
-      color: #000000;
+      color: #1B2A4A;
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -138,13 +139,13 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       page-break-inside: avoid;
     }
     .section-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-      color: #000000;
+      color: #FFFFFF;
       margin-bottom: 12px;
-      padding: 8px 14px;
-      background: #F0F0F0;
-      border-left: 4px solid #F5A623;
+      padding: 10px 16px;
+      background: #1B2A4A;
+      border-left: 5px solid #E65100;
       border-radius: 0 6px 6px 0;
       display: flex;
       align-items: center;
@@ -169,7 +170,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       align-items: center;
       margin-bottom: 6px;
     }
-    .health-name { font-weight: 700; font-size: 12px; color: #000000; }
+    .health-name { font-weight: 700; font-size: 12px; color: #1B2A4A; }
     .health-score { font-weight: 800; font-size: 12px; color: #E65100; }
     .health-bar-bg {
       width: 100%;
@@ -185,7 +186,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       border-radius: 4px;
     }
     .health-explain {
-      color: #333333;
+      color: #4E342E;
       font-size: 10px;
       font-style: italic;
       line-height: 1.4;
@@ -199,7 +200,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       padding: 16px 18px;
       font-size: 12px;
       line-height: 1.7;
-      color: #000000;
+      color: #1B2A4A;
     }
 
     /* ── TABLE ────────────────────────────────── */
@@ -224,7 +225,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       padding: 10px 12px;
       border-bottom: 1px solid #D0D0D0;
       vertical-align: top;
-      color: #000000;
+      color: #1B2A4A;
       font-size: 11px;
     }
     tr:nth-child(even) { background: #F0F0F0; }
@@ -239,7 +240,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       text-transform: uppercase;
       letter-spacing: 0.3px;
     }
-    .owner { color: #BF360C; font-weight: 700; }
+    .owner { color: #E65100; font-weight: 700; }
 
     /* ── DECISIONS ────────────────────────────── */
     .decision-card {
@@ -252,9 +253,9 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       border-right: 1px solid #D0D0D0;
       border-bottom: 1px solid #D0D0D0;
     }
-    .decision-title { font-weight: 700; font-size: 12px; color: #000000; margin-bottom: 3px; }
-    .decision-by { color: #1565C0; font-size: 11px; font-weight: 700; }
-    .decision-ctx { color: #333333; font-size: 11px; margin-top: 3px; }
+    .decision-title { font-weight: 700; font-size: 12px; color: #1B2A4A; margin-bottom: 3px; }
+    .decision-by { color: #E65100; font-size: 11px; font-weight: 700; }
+    .decision-ctx { color: #4E342E; font-size: 11px; margin-top: 3px; }
 
     /* ── SENTIMENT ────────────────────────────── */
     .sentiment-row {
@@ -263,7 +264,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       gap: 10px;
       margin-bottom: 8px;
     }
-    .sentiment-name { width: 80px; font-size: 12px; font-weight: 700; color: #000000; }
+    .sentiment-name { width: 80px; font-size: 12px; font-weight: 700; color: #1B2A4A; }
     .sentiment-bar-bg {
       flex: 1;
       height: 14px;
@@ -272,8 +273,8 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       overflow: hidden;
     }
     .sentiment-bar { height: 100%; border-radius: 7px; }
-    .sentiment-label { width: 70px; text-align: right; font-size: 11px; color: #000000; font-weight: 600; text-transform: capitalize; }
-    .sentiment-pct { width: 35px; text-align: right; font-size: 11px; font-weight: 700; color: #000000; }
+    .sentiment-label { width: 70px; text-align: right; font-size: 11px; color: #1B2A4A; font-weight: 600; text-transform: capitalize; }
+    .sentiment-pct { width: 35px; text-align: right; font-size: 11px; font-weight: 700; color: #1B2A4A; }
 
     /* ── TOPICS ───────────────────────────────── */
     .topics { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -289,23 +290,23 @@ function generateClientPdf(analysis: MeetingAnalysis) {
 
     /* ── EMAIL ────────────────────────────────── */
     .email-box {
-      background: #F5F5F5;
-      border: 1px solid #999999;
+      background: #FAFAFA;
+      border: 2px solid #1B2A4A;
       border-radius: 8px;
       padding: 18px;
       white-space: pre-wrap;
       font-size: 11px;
       line-height: 1.7;
-      color: #000000;
+      color: #1B2A4A;
     }
 
     /* ── FOOTER ───────────────────────────────── */
     .footer {
       margin-top: 32px;
       padding-top: 12px;
-      border-top: 3px solid #333333;
+      border-top: 3px solid #1B2A4A;
       text-align: center;
-      color: #555555;
+      color: #1B2A4A;
       font-size: 10px;
       font-weight: 500;
     }
@@ -326,7 +327,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
   <!-- HEADER -->
   <div class="header">
     <div>
-      <div class="logo">Meet<span>Mind</span> Intelligence Report</div>
+      <div class="logo"><span class="white">Meet</span>Mind <span class="white">Intelligence Report</span></div>
       <div class="header-meta">
         ${dateStr}<br>
         ${analysis.action_items.length} action items · ${analysis.decisions.length} decisions · Health: ${analysis.meeting_health_score}/100
@@ -356,7 +357,7 @@ function generateClientPdf(analysis: MeetingAnalysis) {
       <div class="stat-label">Action Items</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value" style="color:#0D0F12">${analysis.decisions.length}</div>
+      <div class="stat-value" style="color:#1B2A4A">${analysis.decisions.length}</div>
       <div class="stat-label">Decisions</div>
     </div>
     <div class="stat-card">
