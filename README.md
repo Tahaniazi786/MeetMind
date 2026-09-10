@@ -2,74 +2,64 @@
 
 # 🧠 MeetMind — AI Meeting Intelligence Platform
 
-**Transform any meeting into actionable intelligence in seconds.**
+**Transform raw meeting audio & transcripts into structured, actionable intelligence in seconds.**
 
 [![Next.js](https://img.shields.io/badge/Next.js_14-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![OpenAI](https://img.shields.io/badge/OpenAI_GPT--4o-412991?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
-[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini_3.5_Flash-8E75B2?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vercel](https://img.shields.io/badge/Vercel_Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://meet-mind-chi.vercel.app)
 
-*MeetMind uses GPT-4o to analyze meeting transcripts and audio, extracting action items, decisions, sentiment analysis, conflict detection, and generating exportable PDF reports — all in a stunning dark editorial dashboard.*
+*MeetMind leverages Google Gemini multimodal AI to transcribe audio recordings and analyze meeting transcripts, extracting action items, decisions, sentiment analysis, conflict detection, and generating exportable PDF reports — stored in a persistent SQLite database with an interactive dark editorial dashboard.*
+
+👉 **Live Demo & App:** [https://meet-mind-chi.vercel.app](https://meet-mind-chi.vercel.app)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Features & Capabilities
 
 ### 🎯 Core Intelligence
 | Feature | Description |
 |---------|-------------|
-| **3-Level Smart Summary** | TL;DR, Executive, and Detailed summaries with tab switching |
-| **Action Item Extraction** | Auto-detects tasks with owner, deadline, and priority |
-| **Decision Log** | Every decision captured with context and decision-maker |
-| **Sentiment Analysis** | Overall + per-speaker sentiment with confidence scores |
-| **Meeting Health Score** | 0-100 score based on clarity, decisions, participation, actionability |
-| **Key Topics Word Cloud** | Visual representation of most discussed topics |
-| **Follow-up Email Draft** | AI-generated professional email with copy + Gmail integration |
-| **PDF Report Export** | Client-side PDF generation — no server needed |
+| **Multimodal Audio Transcription** | Real-time speaker diarization and audio-to-text supporting `.mp3`, `.wav`, `.m4a`, `.webm`, and `.ogg` |
+| **3-Level Smart Summary** | Instant TL;DR (2 sentences), Executive (5-7 sentences), and Detailed comprehensive summaries |
+| **Interactive Action Items** | Auto-detected tasks with assigned owners, deadlines, priority tags, and interactive completion checkmarks |
+| **Decision Log** | Every explicit and implicit decision captured with surrounding context and decision-maker |
+| **Per-Speaker Sentiment Analysis** | Sentiment breakdown per participant (positive, neutral, tense) with confidence metrics |
+| **Meeting Health Score (0-100)** | Balanced scoring across clarity, decisions reached, speaker participation, and actionability |
+| **Key Topics Word Cloud** | Top 15 discussion topics visualized for instant scanability |
+| **1-Click Follow-up Email Draft** | Auto-generated professional email recap ready to copy with a single click |
+| **Executive PDF Export** | Clean, high-contrast printable meeting report generation |
 
 ### 🚀 Unique Differentiators
 
-#### 🔴 Meeting Archetype Badge
-AI classifies every meeting into one of 5 types:
-- 🔴 **Decision Meeting** — major choices were made
-- 🟡 **Status Update** — informational, low action
-- 🟢 **Brainstorm** — creative, idea generation
-- 🔵 **Crisis Meeting** — high tension, urgent
-- ⚪ **Sync** — routine alignment
+#### 🏷️ Meeting Archetype Classification
+AI automatically categorizes every meeting into one of 5 distinct archetypes:
+- 🎯 **Decision Meeting** — major choices made and approved
+- 🚨 **Crisis Meeting** — high tension, urgent escalations or rollbacks
+- 🔄 **Sync Meeting** — routine alignment and status check-in
+- 💡 **Brainstorming Session** — creative ideation and scoping
+- 📋 **Status Update** — informational broadcast
 
-#### ⚠️ Conflict Detector
-Detects inter-speaker tension and friction:
-> *"⚠️ Potential friction detected between **John** and **Sarah** around the topic of **timeline compression**. Consider a 1:1 follow-up."*
+#### ⚠️ Conflict & Friction Detection
+Identifies interpersonal tension, disagreements, or friction:
+> *"⚠️ Potential friction detected between **John** and **Sarah** regarding headcount allocation and timeline compression."*
 
-#### 📊 Health Score Explainer
-AI-generated one-line explanations for each health metric:
-- Clarity: 22/25 — *"Communication was mostly clear with 2 ambiguous directives"*
-- Decisions: 23/25 — *"4 concrete decisions were reached, each with clear ownership"*
-- Participation: 17/25 — *"John dominated ~45% of speaking time"*
-- Actionability: 25/25 — *"6 clear action items with owners assigned"*
+#### 📊 4-Dimension Health Explainer
+Specific explanations detailing why each score was awarded:
+- **Clarity (25/25):** Clear communication of objectives with minimal ambiguity.
+- **Decisions (23/25):** Concrete decisions made and explicitly assigned.
+- **Participation (22/25):** Balanced speaking distribution across detected participants.
+- **Actionability (25/25):** High number of actionable tasks with explicit deadlines.
 
----
-
-## 🖼️ Screenshots
-
-<div align="center">
-
-### Results Dashboard — Top Section
-*Meeting Archetype Badge + Conflict Detector + Health Score + Stat Cards*
-
-### Results Dashboard — Action Items & Decisions
-*Prioritized action items table + decision log with context*
-
-### Results Dashboard — Sentiment, Topics & Email
-*Per-speaker sentiment bars + word cloud + auto-generated follow-up email*
-
-### Landing Page
-*Animated waveform hero with feature grid*
-
-</div>
+#### 🗄️ Persistent SQLite Meeting Intelligence Archive
+- Search meeting history by keywords, titles, and topics.
+- Filter by meeting archetype pills.
+- Aggregate analytics banner (Total meetings, average health, completed action items).
+- 1-click rehydration into the interactive Results dashboard.
 
 ---
 
@@ -77,49 +67,50 @@ AI-generated one-line explanations for each health metric:
 
 ```
 MeetMind/
-├── backend/                 # Node.js + Express API
-│   ├── src/
-│   │   ├── index.js         # Express server with CORS
-│   │   ├── chains/
-│   │   │   └── analyzeChain.js  # LangChain + GPT-4o pipeline
-│   │   ├── routes/
-│   │   │   ├── analyze.js   # POST /api/analyze
-│   │   │   ├── transcribe.js # POST /api/transcribe (Whisper)
-│   │   │   └── exportPdf.js # POST /api/export-pdf
-│   │   ├── lib/
-│   │   │   ├── whisper.js   # OpenAI Whisper integration
-│   │   │   └── pdfGenerator.js # Puppeteer PDF generation
-│   │   └── middleware/
-│   │       └── errorHandler.js
-│   ├── package.json
-│   └── .env.example
-│
-├── frontend/                # Next.js 14 (App Router)
+├── frontend/                          # Next.js 14 App Router + Vercel Serverless
 │   ├── app/
-│   │   ├── page.tsx         # Landing page
-│   │   ├── analyze/page.tsx # Upload/paste transcript
-│   │   ├── results/page.tsx # Intelligence dashboard
-│   │   ├── demo/page.tsx    # Demo with mock data
-│   │   ├── layout.tsx       # Root layout + providers
-│   │   └── globals.css      # Design system tokens
+│   │   ├── page.tsx                   # Landing page
+│   │   ├── analyze/page.tsx           # Audio upload & transcript input
+│   │   ├── results/page.tsx           # Meeting intelligence dashboard
+│   │   ├── history/page.tsx           # SQLite-synced searchable meeting archive
+│   │   ├── demo/page.tsx              # Standalone demo
+│   │   └── api/                       # Unified Serverless AI API routes
+│   │       ├── transcribe/route.ts    # POST /api/transcribe (Gemini Audio)
+│   │       ├── analyze/route.ts       # POST /api/analyze (Gemini Intelligence)
+│   │       └── health/route.ts        # GET /api/health
 │   ├── components/results/
-│   │   ├── StatCards.tsx     # Health gauge + metrics
-│   │   ├── SmartSummary.tsx  # 3-tab summary
-│   │   ├── ActionItemsTable.tsx
-│   │   ├── DecisionLog.tsx
-│   │   ├── SentimentChart.tsx
-│   │   ├── WordCloud.tsx
-│   │   ├── EmailDraft.tsx
-│   │   ├── ExportBar.tsx    # Client-side PDF export
-│   │   ├── HealthGauge.tsx  # Animated circular gauge
-│   │   ├── ArchetypeBadge.tsx  # Meeting type badge
-│   │   └── ConflictDetector.tsx # Friction warning
+│   │   ├── ActionItemsTable.tsx       # Interactive task checklist
+│   │   ├── ArchetypeBadge.tsx         # Meeting type classifier
+│   │   ├── ConflictDetector.tsx       # Tension detector
+│   │   ├── DecisionLog.tsx            # Decisions catalogue
+│   │   ├── EmailDraft.tsx             # Follow-up email
+│   │   ├── ExportBar.tsx              # PDF export & Save to History
+│   │   ├── HealthGauge.tsx            # Circular health donut
+│   │   ├── SentimentChart.tsx         # Sentiment analysis
+│   │   ├── SmartSummary.tsx           # 3-tab summary
+│   │   ├── StatCards.tsx              # Score breakdown cards
+│   │   └── WordCloud.tsx              # Key topics cloud
 │   ├── context/
-│   │   └── MeetingContext.tsx # Global state + localStorage
+│   │   └── MeetingContext.tsx         # React Context state provider
 │   ├── lib/
-│   │   └── api.ts           # API client + mock fallback
-│   ├── package.json
-│   └── .env.example
+│   │   ├── api.ts                     # API client & local persistence
+│   │   └── geminiServer.ts            # Server-side Gemini AI engine
+│   └── package.json
+│
+├── backend/                           # Standalone Express + SQLite Service (Optional)
+│   ├── src/
+│   │   ├── index.js                   # Express server entry point
+│   │   ├── chains/analyzeChain.js     # Gemini analysis pipeline
+│   │   ├── lib/
+│   │   │   ├── database.js            # SQLite database manager (better-sqlite3)
+│   │   │   └── geminiAudio.js         # Multimodal audio transcription
+│   │   └── routes/
+│   │       ├── analyze.js             # /api/analyze
+│   │       ├── transcribe.js          # /api/transcribe
+│   │       ├── meetings.js            # /api/meetings CRUD
+│   │       └── exportPdf.js           # /api/export-pdf
+│   ├── data/                          # SQLite persistent database storage
+│   └── package.json
 │
 └── README.md
 ```
@@ -130,21 +121,17 @@ MeetMind/
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | Next.js 14 (App Router), React 18, TypeScript |
-| **Styling** | Tailwind CSS, Framer Motion |
-| **Backend** | Node.js, Express.js |
-| **AI/ML** | OpenAI GPT-4o, Whisper API, LangChain.js |
-| **PDF Export** | Client-side (window.print) + Server-side (Puppeteer) |
-| **State** | React Context + localStorage persistence |
-| **Design** | Dark Editorial theme (Charcoal, Amber, Cool White) |
+| **Frontend Framework** | Next.js 14 (App Router), React 18, TypeScript |
+| **Styling & UI** | Tailwind CSS, Framer Motion, Lucide Icons |
+| **AI Model & Engine** | Google Gemini 3.5 Flash Lite (`@google/generative-ai`) |
+| **Audio Processing** | Gemini Multimodal Audio (Base64 inline + File API) |
+| **Database** | SQLite (`better-sqlite3`) with WAL mode & LocalStorage sync |
+| **PDF Generation** | Custom DOM canvas & print styles (`html2canvas`, `jspdf`) |
+| **Deployment** | Vercel (Frontend & Serverless AI Functions) |
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- OpenAI API Key ([Get one here](https://platform.openai.com/api-keys))
+## 🚀 Quick Start (Local Development)
 
 ### 1. Clone the repository
 ```bash
@@ -152,57 +139,23 @@ git clone https://github.com/Tahaniazi786/MeetMind.git
 cd MeetMind
 ```
 
-### 2. Setup Backend
-```bash
-cd backend
-npm install
-
-# Create .env file
-cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
-
-npm run dev
-# ✅ Backend running on http://localhost:4000
-```
-
-### 3. Setup Frontend
+### 2. Run the Unified Next.js App
 ```bash
 cd frontend
 npm install
 
-# Create .env.local
-cp .env.example .env.local
-
+# Run dev server
 npm run dev
-# ✅ Frontend running on http://localhost:3000
 ```
+Open **[http://localhost:3000](http://localhost:3000)** in your browser!
 
-### 4. Open the app
-Navigate to `http://localhost:3000` and start analyzing meetings!
-
-> **💡 No API key?** The app works without a backend too! It uses intelligent client-side analysis as a fallback.
-
----
-
-## 📱 Usage
-
-1. **Upload audio** or **paste a transcript** on the analyze page
-2. Click **"Analyze Meeting →"** — GPT-4o processes the transcript (~15-30s)
-3. View the full **Intelligence Dashboard** with all metrics
-4. Click **"Export PDF Report"** to save a styled dark-themed PDF
-5. Use the **Follow-up Email** section to copy or open in Gmail
-
----
-
-## 🎨 Design System
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--bg` | `#0D0F12` | Main background (Charcoal) |
-| `--accent` | `#F5A623` | Primary accent (Amber) |
-| `--text` | `#F0EDE8` | Body text (Cool White) |
-| **Heading Font** | Syne | Display headings |
-| **Mono Font** | DM Mono | Data, labels, code |
+### 3. (Optional) Run the Standalone Backend
+```bash
+cd backend
+npm install
+npm run dev
+# ✅ Backend running on http://localhost:4000
+```
 
 ---
 
@@ -210,31 +163,21 @@ Navigate to `http://localhost:3000` and start analyzing meetings!
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/health` | Health check |
-| `POST` | `/api/transcribe` | Audio → text (Whisper) |
-| `POST` | `/api/analyze` | Transcript → AI analysis |
-| `POST` | `/api/export-pdf` | Analysis → PDF (server-side) |
-
-### Example: Analyze a transcript
-```bash
-curl -X POST http://localhost:4000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"transcript": "Sarah: Let'\''s discuss the Q4 roadmap..."}'
-```
+| `GET` | `/api/health` | Service health status |
+| `POST` | `/api/transcribe` | Audio file → Diarized transcript (Gemini) |
+| `POST` | `/api/analyze` | Transcript → Full intelligence JSON schema |
+| `GET` | `/api/meetings` | List saved meetings with search (`?q=`) & filter (`?archetype=`) |
+| `POST` | `/api/meetings` | Save meeting analysis to SQLite database |
+| `PATCH` | `/api/meetings/:id/action-items/:index` | Toggle action item completion status |
+| `GET` | `/api/meetings/stats/summary` | Aggregate analytics (total meetings, health, action items) |
 
 ---
 
-## 🌐 Deployment
+## 🌐 Live Deployment
 
-### Frontend → Vercel
-1. Connect GitHub repo on [vercel.com](https://vercel.com)
-2. Set root directory to `frontend`
-3. Add env: `NEXT_PUBLIC_API_URL` = your backend URL
-
-### Backend → Railway
-1. Connect GitHub repo on [railway.app](https://railway.app)
-2. Set root directory to `backend`
-3. Add env: `OPENAI_API_KEY`, `FRONTEND_URL`, `PORT`
+* **Production URL:** [https://meet-mind-chi.vercel.app](https://meet-mind-chi.vercel.app)
+* **Analyze:** [https://meet-mind-chi.vercel.app/analyze](https://meet-mind-chi.vercel.app/analyze)
+* **History:** [https://meet-mind-chi.vercel.app/history](https://meet-mind-chi.vercel.app/history)
 
 ---
 
@@ -242,12 +185,8 @@ curl -X POST http://localhost:4000/api/analyze \
 
 MIT License — see [LICENSE](LICENSE) for details.
 
----
-
 <div align="center">
 
-**Built with ❤️ for the Hackathon**
-
-*MeetMind — Because every meeting deserves intelligence.*
+**MeetMind — Because every meeting deserves intelligence.**
 
 </div>
