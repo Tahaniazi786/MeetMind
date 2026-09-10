@@ -1,9 +1,8 @@
-"use client";
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { MeetingAnalysis } from "@/context/MeetingContext";
+import { saveMeetingToDb } from "@/lib/api";
 
 interface Props {
   analysis: MeetingAnalysis;
@@ -479,6 +478,8 @@ function generateClientPdf(analysis: MeetingAnalysis) {
 export default function ExportBar({ analysis }: Props) {
   const [exporting, setExporting] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleExportPdf = () => {
     setExporting(true);
@@ -491,24 +492,27 @@ export default function ExportBar({ analysis }: Props) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setSaving(true);
     try {
-      const history = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
-      // Check if already saved this session
-      if (!history.find((h: any) => h.tldr === analysis?.tldr)) {
-        history.unshift({
-          id: Date.now().toString(),
-          date: new Date().toISOString(),
-          tldr: analysis?.tldr,
-          health: analysis?.meeting_health_score,
-          analysisData: analysis, 
-        });
-        localStorage.setItem("meetmind_history", JSON.stringify(history));
-      }
+      await saveMeetingToDb({
+        title: analysis.meeting_archetype?.label || "Meeting Report",
+        analysis: analysis as any,
+      });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e) {
-      console.error("Failed to save to history", e);
+      console.error("Failed to save to database", e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCopyEmail = () => {
+    if (analysis?.follow_up_email) {
+      navigator.clipboard.writeText(analysis.follow_up_email);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2500);
     }
   };
 
@@ -516,45 +520,64 @@ export default function ExportBar({ analysis }: Props) {
     <motion.div
       initial={{ y: 100 }}
       animate={{ y: 0 }}
-      transition={{ delay: 1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed bottom-0 left-0 right-0 z-40 bg-bg-card/95 backdrop-blur-md border-t border-bg-border"
+      transition={{ delay: 0.5, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed bottom-0 left-0 right-0 z-40 bg-bg-card/95 backdrop-blur-md border-t border-bg-border shadow-2xl"
     >
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="text-text-muted text-xs font-mono">
-          MeetMind Report · {new Date().toLocaleDateString()}
+      <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="text-text-muted text-xs font-mono flex items-center gap-2">
+          <span>🧠 MeetMind Intelligence Report</span>
+          <span>·</span>
+          <span>{new Date().toLocaleDateString()}</span>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {analysis?.follow_up_email && (
+            <button
+              onClick={handleCopyEmail}
+              className="px-4 py-2 text-xs font-mono font-bold rounded-lg border bg-bg border-bg-border text-text hover:border-accent/40 hover:text-accent transition-all flex items-center gap-1.5"
+            >
+              <span>{copiedEmail ? "✓" : "📋"}</span>
+              <span>{copiedEmail ? "Email Copied!" : "Copy Email"}</span>
+            </button>
+          )}
+
           <Link
             href="/history"
-            className="px-5 py-2.5 text-sm font-display font-bold rounded-lg border bg-bg border-bg-border text-text hover:border-accent/30 hover:text-accent transition-all flex items-center justify-center"
+            className="px-4 py-2 text-xs font-mono font-bold rounded-lg border bg-bg border-bg-border text-text hover:border-accent/40 hover:text-accent transition-all flex items-center gap-1.5"
           >
-            View History
+            <span>📁</span>
+            <span>View History</span>
           </Link>
+
           <button
             onClick={handleSave}
-            className={`px-5 py-2.5 text-sm font-display font-bold rounded-lg border transition-all ${
+            disabled={saving}
+            className={`px-4 py-2 text-xs font-mono font-bold rounded-lg border transition-all flex items-center gap-1.5 ${
               saved
                 ? "bg-status-low/15 text-status-low border-status-low/30"
-                : "bg-bg border-bg-border text-text hover:border-accent/30 hover:text-accent"
+                : "bg-bg border-bg-border text-text hover:border-accent/40 hover:text-accent"
             }`}
           >
-            {saved ? "✓ Saved" : "Save to History"}
+            <span>{saved ? "✓" : "💾"}</span>
+            <span>{saved ? "Saved to DB" : saving ? "Saving…" : "Save to DB"}</span>
           </button>
 
           <button
             id="btn-export-pdf"
             onClick={handleExportPdf}
             disabled={exporting}
-            className="px-6 py-2.5 text-sm font-display font-bold rounded-lg bg-accent text-bg hover:shadow-lg hover:shadow-accent/20 transition-all disabled:opacity-50"
+            className="px-5 py-2 text-xs font-mono font-bold rounded-lg bg-accent text-bg hover:shadow-lg hover:shadow-accent/20 transition-all disabled:opacity-50 flex items-center gap-1.5"
           >
             {exporting ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-bg border-t-transparent rounded-full animate-spin" />
-                Generating…
-              </span>
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-bg border-t-transparent rounded-full animate-spin" />
+                <span>Generating…</span>
+              </>
             ) : (
-              "Export PDF Report"
+              <>
+                <span>⬇</span>
+                <span>Export PDF Report</span>
+              </>
             )}
           </button>
         </div>

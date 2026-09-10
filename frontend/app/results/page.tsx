@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useMeeting } from "@/context/MeetingContext";
+import { saveMeetingToDb } from "@/lib/api";
 import StatCards from "@/components/results/StatCards";
 import SmartSummary from "@/components/results/SmartSummary";
 import ActionItemsTable from "@/components/results/ActionItemsTable";
@@ -30,6 +31,19 @@ const fadeUp = {
 export default function ResultsPage() {
   const router = useRouter();
   const { analysis, transcript, clearAnalysis, isHydrated } = useMeeting();
+  const savedRef = useRef(false);
+
+  // Auto-save to SQLite database when analysis is generated
+  useEffect(() => {
+    if (analysis && !savedRef.current) {
+      savedRef.current = true;
+      saveMeetingToDb({
+        title: analysis.meeting_archetype?.label || "Meeting Report",
+        transcript: transcript || "",
+        analysis: analysis as any,
+      }).catch((e) => console.warn("Auto-save notice:", e));
+    }
+  }, [analysis, transcript]);
 
   // Redirect to analyze ONLY after hydration is complete and analysis is still null
   useEffect(() => {

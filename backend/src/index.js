@@ -7,6 +7,7 @@ const fs = require("fs");
 const transcribeRouter = require("./routes/transcribe");
 const analyzeRouter = require("./routes/analyze");
 const exportPdfRouter = require("./routes/exportPdf");
+const meetingsRouter = require("./routes/meetings");
 const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
@@ -22,14 +23,13 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, true); // Allow all in production for now
+        callback(null, true); // Allow all in production
       }
     },
-    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -59,6 +59,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/transcribe", transcribeRouter);
 app.use("/api/analyze", analyzeRouter);
 app.use("/api/export-pdf", exportPdfRouter);
+app.use("/api/meetings", meetingsRouter);
 
 // ── 404 catch-all ────────────────────────────────────────────────────
 app.use((_req, res) => {

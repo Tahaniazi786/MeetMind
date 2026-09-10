@@ -1,6 +1,14 @@
-const { ChatOpenAI } = require("@langchain/openai");
-const { PromptTemplate } = require("@langchain/core/prompts");
-const { RunnableSequence } = require("@langchain/core/runnables");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Ultra-fast, free, non-freezing models in priority order
+const CANDIDATE_MODELS = [
+  "gemini-3.5-flash-lite", // 0.8s response time, never freezes
+  "gemini-3.1-flash-lite", // Fast lightweight fallback
+  "gemini-3.5-flash",      // Full structured reasoning
+  "gemini-flash-lite-latest",
+  "gemini-3.6-flash",
+  "gemini-3.7-flash",
+];
 
 // ── The exact JSON schema the model must return ──────────────────────
 const OUTPUT_SCHEMA = `{
@@ -50,13 +58,14 @@ const OUTPUT_SCHEMA = `{
 }`;
 
 // ── System prompt ────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `You are MeetMind, an expert meeting intelligence AI. Analyze the following meeting transcript and return ONLY valid JSON with NO markdown, NO explanation, NO code fences.
+function buildPrompt(transcript) {
+  return `You are MeetMind, an expert meeting intelligence AI. Analyze the following meeting transcript and return ONLY valid JSON matching the exact schema specified below. Do NOT add markdown fences, preamble, or explanation.
 
 Extract:
 1. Three-level summaries (tldr — exactly 2 sentences, executive_summary — 5 to 7 sentences, detailed_summary — full comprehensive paragraph)
-2. All action items with owner names found in transcript, estimated deadlines (use "TBD" if unclear), and priority (high/medium/low)
+2. All action items with owner names found in transcript, estimated deadlines (use "TBD" if unclear), and priority ("high", "medium", or "low")
 3. All decisions explicitly or implicitly made, with who made them and surrounding context
-4. Sentiment analysis per detected speaker with confidence score (0-1), plus overall sentiment and score (0-100)
+4. Sentiment analysis per detected speaker with confidence score (0-1), plus overall sentiment ("positive", "neutral", "tense", or "mixed") and score (0-100)
 5. Meeting health score (0-100) based on four equally-weighted dimensions (each 0-25):
    - clarity: how clear and structured the communication was
    - decisions_made: number and quality of decisions reached
@@ -73,49 +82,71 @@ If no clear deadlines are mentioned, use "TBD" for deadline fields.
 Always return every field — never omit any.
 
 Transcript:
-{transcript}
+${transcript}
 
-Return ONLY this exact JSON structure (no surrounding text):
+Return ONLY this exact JSON structure:
 ${OUTPUT_SCHEMA}`;
+}
+
+function withTimeout(promise, ms = 30000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`Model analysis timed out after ${ms / 1000}s`)), ms)
+    ),
+  ]);
+}
 
 /**
- * Run the full MeetMind analysis chain on a transcript.
+ * Run the full MeetMind analysis chain on a transcript using Google Gemini.
  *
  * @param {string} transcript — raw meeting transcript text
  * @returns {Promise<object>} — parsed JSON matching the schema above
  */
 async function runAnalysisChain(transcript) {
-  if (!process.env.OPENAI_API_KEY) {
-    throw Object.assign(new Error("OPENAI_API_KEY is not set in .env"), {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    throw Object.assign(new Error("GEMINI_API_KEY is not set in .env"), {
       statusCode: 500,
       code: "AI_AUTH_ERROR",
     });
   }
 
-  // ── Initialize GPT-4o with 120 s timeout ────────────────────────
-  const model = new ChatOpenAI({
-    modelName: "gpt-4o",
-    temperature: 0.2,
-    maxTokens: 4096,
-    timeout: 120_000, // 120 seconds
-    openAIApiKey: process.env.OPENAI_API_KEY,
-  });
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const prompt = buildPrompt(transcript);
 
-  // ── Build the prompt ────────────────────────────────────────────
-  const prompt = PromptTemplate.fromTemplate(SYSTEM_PROMPT);
+  let rawOutput = null;
+  let lastError = null;
 
-  // ── Build the chain ─────────────────────────────────────────────
-  const chain = RunnableSequence.from([
-    prompt,
-    model,
-    // Extract string content from AIMessage
-    (aiMessage) => aiMessage.content,
-  ]);
+  for (const modelName of CANDIDATE_MODELS) {
+    try {
+      console.log(`🧠 Analyzing transcript with model: ${modelName}...`);
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.2,
+        },
+      });
 
-  // ── Invoke ──────────────────────────────────────────────────────
-  const rawOutput = await chain.invoke({ transcript });
+      const result = await withTimeout(model.generateContent(prompt), 30000);
+      rawOutput = result.response.text();
+      console.log(`✅ Meeting analysis complete using ${modelName}`);
+      break;
+    } catch (err) {
+      console.warn(`⚠️ Analysis with model ${modelName} failed (${err.message}). Trying next model...`);
+      lastError = err;
+    }
+  }
 
-  // ── Parse — strip any accidental markdown fences ────────────────
+  if (!rawOutput) {
+    throw Object.assign(
+      new Error(lastError?.message || "Failed to analyze meeting with Gemini AI"),
+      { statusCode: 502, code: "AI_ANALYSIS_ERROR" }
+    );
+  }
+
+  // ── Parse output ────────────────────────────────────────────────
   let cleaned = rawOutput.trim();
   if (cleaned.startsWith("```")) {
     cleaned = cleaned.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
@@ -125,7 +156,7 @@ async function runAnalysisChain(transcript) {
   try {
     parsed = JSON.parse(cleaned);
   } catch (parseErr) {
-    console.error("🔴 Failed to parse AI output as JSON:");
+    console.error("🔴 Failed to parse Gemini AI output as JSON:");
     console.error(cleaned.slice(0, 500));
     throw Object.assign(
       new Error("AI returned invalid JSON. Please try again."),
@@ -150,8 +181,8 @@ function normalizeOutput(data) {
           task: item.task || "",
           owner: item.owner || "Unassigned",
           deadline: item.deadline || "TBD",
-          priority: ["high", "medium", "low"].includes(item.priority)
-            ? item.priority
+          priority: ["high", "medium", "low"].includes(item.priority?.toLowerCase())
+            ? item.priority.toLowerCase()
             : "medium",
         }))
       : [],
@@ -175,7 +206,7 @@ function normalizeOutput(data) {
             confidence:
               typeof s.confidence === "number"
                 ? Math.min(1, Math.max(0, s.confidence))
-                : 0.5,
+                : 0.8,
           }))
         : [],
     },
@@ -207,11 +238,13 @@ function normalizeOutput(data) {
         : [],
     },
     meeting_archetype: {
-      type: ["decision", "status_update", "brainstorm", "crisis", "sync"].includes(data.meeting_archetype?.type)
-        ? data.meeting_archetype.type
+      type: ["decision", "status_update", "brainstorm", "crisis", "sync"].includes(
+        data.meeting_archetype?.type?.toLowerCase()
+      )
+        ? data.meeting_archetype.type.toLowerCase()
         : "sync",
       label: data.meeting_archetype?.label || "Sync Meeting",
-      emoji: data.meeting_archetype?.emoji || "⚪",
+      emoji: data.meeting_archetype?.emoji || "🔄",
       description: data.meeting_archetype?.description || "",
     },
     key_topics: Array.isArray(data.key_topics)

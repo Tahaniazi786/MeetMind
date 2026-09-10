@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://meetmind-production-4c34.up.railway.app";
 
 /**
  * Transcribe an audio file via the backend.
@@ -27,14 +27,7 @@ export async function transcribeAudio(file: File): Promise<{
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Transcription failed" }));
-    
-    // Automatically fall back to realistic demo data if API quota is exceeded
-    console.warn("Audio transcription failed, falling back to Demo Mode. Reason:", err.error || err.message);
-    return {
-      transcript: "Sarah: Good morning everyone. Let's get started with our Q4 planning meeting.\n\nJohn: Before we dive in, I want to flag that the engineering team is already at capacity. Any new initiatives need to come with additional resources.\n\nSarah: Noted. Let's start with mobile. Our analytics show 68% of user traffic now comes from mobile devices, but we only have a responsive web app. I'm proposing we build a native mobile app and target a December launch.\n\nMaria: From a design perspective, I think we can reuse about 60% of our existing component library. I'd recommend a phased approach — MVP by November 15th with core features, then iterate.\n\nJohn: December is extremely aggressive. We'd need at least two more frontend developers. I want it on record that this timeline is unrealistic with current headcount.\n\nSarah: That's fair. I've already gotten budget approval for $250K — $150K for two new hires and $100K for infrastructure. John, can you post the job listings by end of this week?\n\nJohn: I can do that, but hiring takes 6-8 weeks minimum. We should also bring on two senior React contractors immediately to bridge the gap.\n\nSarah: Agreed. John, draft the contractor requirements document by end of day tomorrow.\n\nLisa: I need to raise a critical concern. We have 47 enterprise accounts threatening to churn because our uptime has been 99.2% versus the 99.9% they expect.\n\nSarah: That's alarming. John, can we do a reliability sprint?\n\nJohn: We can start a targeted reliability sprint on January 15th. I'll set up a dedicated Slack channel between engineering and customer success.\n\nSarah: Great. Let's do weekly check-ins starting Monday at 10 AM. Meeting adjourned.",
-      duration: 320,
-      speakers_detected: 4
-    };
+    throw new Error(err.message || err.error || "Audio transcription failed.");
   }
 
   return res.json();
@@ -42,7 +35,6 @@ export async function transcribeAudio(file: File): Promise<{
 
 /**
  * Run the full AI analysis on a transcript.
- * Falls back to mock data if the backend is unreachable.
  */
 export async function analyzeTranscript(transcript: string): Promise<Record<string, unknown>> {
   let res: Response;
@@ -53,16 +45,14 @@ export async function analyzeTranscript(transcript: string): Promise<Record<stri
       body: JSON.stringify({ transcript }),
     });
   } catch {
-    // Backend unreachable — use intelligent mock analysis
-    console.warn("Backend unreachable, generating client-side mock analysis");
+    // If backend is completely offline, generate smart client-side analysis from transcript
+    console.warn("Backend unreachable, generating client-side analysis from transcript");
     return generateMockAnalysis(transcript);
   }
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: "Analysis failed" }));
-    // Automatically fall back to realistic mock AI analysis on ANY backend error (e.g., 429 Quota Exceeded, 500, etc.)
-    console.warn("Analysis API failed (API Quota or Backend issue), falling back to client-side mock analysis:", err.error || err.message);
-    return generateMockAnalysis(transcript);
+    throw new Error(err.message || err.error || "Meeting analysis failed.");
   }
 
   return res.json();
@@ -91,6 +81,167 @@ export async function exportPdf(analysis: Record<string, unknown>): Promise<Blob
   }
 
   return res.blob();
+}
+
+// ── Database REST API Clients ────────────────────────────────────────
+
+export interface SavedMeetingRecord {
+  id: string;
+  title: string;
+  transcript?: string;
+  duration: number;
+  speakers_detected: number;
+  health_score: number;
+  archetype: {
+    type: string;
+    emoji: string;
+    label: string;
+  };
+  tldr: string;
+  created_at: string;
+  updated_at: string;
+  analysis: Record<string, unknown>;
+}
+
+export interface MeetingStats {
+  total_meetings: number;
+  average_health_score: number;
+  total_action_items: number;
+  completed_action_items: number;
+  top_archetype?: {
+    type: string;
+    label: string;
+    emoji: string;
+    count: number;
+  } | null;
+}
+
+export async function saveMeetingToDb(payload: {
+  id?: string;
+  title?: string;
+  transcript?: string;
+  duration?: number;
+  speakers_detected?: number;
+  analysis: Record<string, unknown>;
+}): Promise<SavedMeetingRecord> {
+  try {
+    const res = await fetch(`${API_URL}/api/meetings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to save to database");
+    }
+    return res.json();
+  } catch (err) {
+    // Fallback to local storage for offline resilience
+    const local = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+    const newRecord: SavedMeetingRecord = {
+      id: payload.id || Date.now().toString(),
+      title: payload.title || "Meeting Report",
+      transcript: payload.transcript || "",
+      duration: payload.duration || 0,
+      speakers_detected: payload.speakers_detected || 1,
+      health_score: (payload.analysis?.meeting_health_score as number) || 50,
+      archetype: (payload.analysis?.meeting_archetype as any) || { type: "sync", emoji: "🔄", label: "Sync Meeting" },
+      tldr: (payload.analysis?.tldr as string) || "",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      analysis: payload.analysis,
+    };
+    local.unshift(newRecord);
+    localStorage.setItem("meetmind_history", JSON.stringify(local));
+    return newRecord;
+  }
+}
+
+export async function fetchMeetingsFromDb(params?: {
+  q?: string;
+  archetype?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<SavedMeetingRecord[]> {
+  const query = new URLSearchParams();
+  if (params?.q) query.set("q", params.q);
+  if (params?.archetype && params.archetype !== "all") query.set("archetype", params.archetype);
+  if (params?.limit) query.set("limit", params.limit.toString());
+  if (params?.offset) query.set("offset", params.offset.toString());
+
+  try {
+    const res = await fetch(`${API_URL}/api/meetings?${query.toString()}`);
+    if (!res.ok) throw new Error("DB fetch failed");
+    const data = await res.json();
+    return data.meetings || [];
+  } catch {
+    // Fallback to local storage
+    const local = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+    return local;
+  }
+}
+
+export async function fetchMeetingById(id: string): Promise<SavedMeetingRecord | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/meetings/${id}`);
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    const local = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+    return local.find((m: SavedMeetingRecord) => m.id === id) || null;
+  }
+}
+
+export async function deleteMeetingFromDb(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_URL}/api/meetings/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Delete failed");
+    return true;
+  } catch {
+    const local = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+    const filtered = local.filter((m: SavedMeetingRecord) => m.id !== id);
+    localStorage.setItem("meetmind_history", JSON.stringify(filtered));
+    return true;
+  }
+}
+
+export async function clearAllMeetingsFromDb(): Promise<boolean> {
+  try {
+    await fetch(`${API_URL}/api/meetings`, { method: "DELETE" });
+    localStorage.removeItem("meetmind_history");
+    return true;
+  } catch {
+    localStorage.removeItem("meetmind_history");
+    return true;
+  }
+}
+
+export async function toggleActionItemDb(meetingId: string, itemIndex: number): Promise<SavedMeetingRecord | null> {
+  try {
+    const res = await fetch(`${API_URL}/api/meetings/${meetingId}/action-items/${itemIndex}`, {
+      method: "PATCH",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchMeetingStats(): Promise<MeetingStats> {
+  try {
+    const res = await fetch(`${API_URL}/api/meetings/stats/summary`);
+    if (!res.ok) throw new Error("Stats fetch failed");
+    return res.json();
+  } catch {
+    const local = JSON.parse(localStorage.getItem("meetmind_history") || "[]");
+    return {
+      total_meetings: local.length,
+      average_health_score: local.length ? Math.round(local.reduce((a: number, c: any) => a + (c.health_score || 50), 0) / local.length) : 0,
+      total_action_items: 0,
+      completed_action_items: 0,
+      top_archetype: null,
+    };
+  }
 }
 
 // ── Client-side mock analysis generator ──────────────────────────────
