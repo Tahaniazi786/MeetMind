@@ -559,7 +559,7 @@ export default function ExportBar({ analysis }: Props) {
             }`}
           >
             <span>{saved ? "✓" : "💾"}</span>
-            <span>{saved ? "Saved to DB" : saving ? "Saving…" : "Save to DB"}</span>
+            <span>{saved ? "Saved to History" : saving ? "Saving…" : "Save to History"}</span>
           </button>
 
           <button

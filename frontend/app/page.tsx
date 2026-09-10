@@ -77,21 +77,9 @@ export default function LandingPage() {
         <div className="flex items-center gap-6">
           <Link
             href="/history"
-            className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
+            className="text-sm font-mono font-bold text-text-muted hover:text-accent transition-colors"
           >
             History
-          </Link>
-          <Link
-            href="/demo"
-            className="text-sm text-status-low hover:text-status-low/80 transition-colors font-mono"
-          >
-            ✨ Live Demo
-          </Link>
-          <Link
-            href="/analyze"
-            className="text-sm text-text-muted hover:text-accent transition-colors font-mono"
-          >
-            Launch App →
           </Link>
         </div>
       </motion.nav>
