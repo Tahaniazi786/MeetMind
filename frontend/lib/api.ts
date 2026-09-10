@@ -1,7 +1,12 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL !== undefined ? process.env.NEXT_PUBLIC_API_URL : "";
+// Ignore any legacy Railway URLs from previous deployments
+let resolvedApiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+if (resolvedApiUrl.includes("railway.app")) {
+  resolvedApiUrl = "";
+}
+const API_URL = resolvedApiUrl;
 
 /**
- * Transcribe an audio file via the backend.
+ * Transcribe an audio file via the unified backend.
  */
 export async function transcribeAudio(file: File): Promise<{
   transcript: string;
@@ -17,11 +22,9 @@ export async function transcribeAudio(file: File): Promise<{
       method: "POST",
       body: formData,
     });
-  } catch {
+  } catch (err: any) {
     throw new Error(
-      "Cannot reach the backend server. Make sure the backend is running on " +
-        API_URL +
-        " with a valid OPENAI_API_KEY in .env"
+      "Cannot reach transcription service. Please check your network connection or try again."
     );
   }
 
